@@ -1,0 +1,2 @@
+# FixMe
+Brief Modern computing cannot be conceived without networks of computers communicating with each other. To make this possible you need to understand the TCP protocol, sockets and ports. The problems that arise in peer-to-peer architecture or client-server architecture are numerous and have multiple solutions. You will have to implement a server component and two client components that exchange messages between each other, over the TCP protocol, ensuring that the messages are well-formed and are delivered correctly.
