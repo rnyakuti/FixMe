@@ -6,3 +6,10 @@ A program that simulates stock exchanges and deals with trading algorithms, with
 - Java Executor framework
 
 - Non Blocking Sockets
+
+# To Run
+ - mvn clean package
+ - cd router && cd target && java -jar [name of jar].jar
+ - new terminal cd market && cd target && java -jar [name of jar].jar [price] [quantity] 
+ - new terminal cd broker && cd target && java -jar [name of jar].jar [marketid] 
+ 
