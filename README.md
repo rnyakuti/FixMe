@@ -3,6 +3,6 @@ A program that simulates stock exchanges and deals with trading algorithms, with
 
 - Multi-module Maven Build
 
--Java Executor framework
+- Java Executor framework
 
--Non Blocking Sockets
+- Non Blocking Sockets
