@@ -54,10 +54,8 @@ public class Server extends Thread {
                     if (key.isAcceptable()) {
                         SocketChannel sc = server.accept();
                         sc.configureBlocking(false);
-                        sc.register(selector, SelectionKey.
-                                OP_READ);
-                        System.out.println("Connection Accepted: "
-                                + sc.getLocalAddress() + "\n");
+                        sc.register(selector, SelectionKey.OP_READ);
+                        System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ]" + sc.getLocalAddress() + "\n"+RESET_CO);
                     }
                     if (key.isReadable())
                     {
@@ -65,11 +63,11 @@ public class Server extends Thread {
                         ByteBuffer bb = ByteBuffer.allocate(1024);
                         sc.read(bb);
                         String result = new String(bb.array()).trim();
-                        System.out.println("Message received: " + result + " Message length= " + result.length());
+                        System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
                         if (result.length() <= 0) {
                             sc.close();
-                            System.out.println("Connection closed...");
-                            System.out.println("Server will keep running. " + "Try running another client to " + "re-establish connection");
+                            System.out.println(PURPLE + componentType+RED+"[ CONNECTION CLOSED...]"+RESET_CO);
+                            System.out.println(CYAN+"Server will keep running. " + "Run " +YELLOW+ componentType+CYAN+" to re-establish connection"+RESET_CO);
                         }
                     }
                 }
