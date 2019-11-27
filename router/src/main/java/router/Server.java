@@ -1,13 +1,12 @@
 package router;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.*;
+import java.util.*;
+
+
 public class Server extends Thread {
 
     /**********************************************/
@@ -35,13 +34,19 @@ public class Server extends Thread {
     {
         try
         {
-            AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open();
+            Selector selector = Selector.open();
+            ServerSocketChannel server = ServerSocketChannel.open();
+            server.configureBlocking(false);
             server.bind(new InetSocketAddress("127.0.0.1", port));
             System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + " ..." + CYAN + " ]" + RESET_CO);
-            Future<AsynchronousSocketChannel> acceptCon = server.accept();
-            AsynchronousSocketChannel client = acceptCon.get();
+            server.register(selector, SelectionKey.OP_ACCEPT);
+            SelectionKey key = null;
+            while (true)
+            {
+
+            }
         }
-        catch (IOException | ExecutionException |InterruptedException e)
+        catch (IOException e)
         {
             System.out.println(RED+"Disconnected from the server");
         }
