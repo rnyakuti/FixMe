@@ -6,7 +6,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 import java.io.BufferedReader;
-
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.xml.bind.DatatypeConverter;
 
 public class Server extends Thread {
 
@@ -23,6 +26,7 @@ public class Server extends Thread {
 
     /*********************************************/
     public int port;
+	// private static final Logger logger = Logger.getLogger(MD5Checksum.class.getName());
     public String componentType;
 	public BufferedReader input = null;
 	protected int brokerID = 100000;//limit  499 999
@@ -115,7 +119,17 @@ public class Server extends Thread {
                         ByteBuffer bb = ByteBuffer.allocate(1024);
                         sc.read(bb);
                         String result = new String(bb.array()).trim();
-                        System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
+						//validate checksum
+						String [] arrValidate = result.split("-");
+						if( validateChecksum(arrValidate[0], arrValidate[1]))
+						{
+							System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
+						}
+						else
+					    {
+							 System.out.println(RED+"Message from "+PURPLE + componentType+RED+" failed checksum and will be disregarded "+RESET_CO);
+						}
+                        
                         if (result.length() < 0) {
                             sc.close();
                             System.out.println(PURPLE + componentType+RED+"[ CONNECTION CLOSED...]"+RESET_CO);
@@ -125,11 +139,30 @@ public class Server extends Thread {
                 }
             }
         }
-        catch (IOException e)
+        catch (IOException | NoSuchAlgorithmException e)
         {
             System.out.println(RED+"Disconnected from the server");
         }
     }
+	
+	
+	public static boolean validateChecksum(String msg, String checksum)  throws NoSuchAlgorithmException 
+	{
+   
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(msg.getBytes());
+		byte[] digest = md.digest();
+		String newChecksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
+		 if(newChecksum.equals(checksum))
+		 {
+			 return true;
+		 }
+		 else
+		 {
+			 return false;
+		 }
+
+	}
 
     @Override
     public void run()

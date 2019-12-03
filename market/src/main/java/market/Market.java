@@ -8,10 +8,18 @@ import java.util.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.CharBuffer;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.xml.bind.DatatypeConverter;
+
+
 public class Market
 {
     private static BufferedReader input = null;
 	    static String message = null;
+  //  private static final Logger logger = Logger.getLogger(MD5Checksum.class.getName());
+  
     public static void main(String[] args) throws Exception {
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5001);
         Selector selector = Selector.open();
@@ -74,11 +82,14 @@ public class Market
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
             String result = new String(bb.array()).trim();
-            System.out.println("Message received from Server: " + result + " Message length= " + result.length());
+            System.out.println("Message received from Server: " + result);
         }
         if (key.isWritable()) {
             System.out.print("Type a message (type quit to stop): ");
             String msg = input.readLine();
+			//generate checksum of msg
+			String checksum = createChecksum(msg);
+			msg+="-"+checksum;
             if (msg.equalsIgnoreCase("quit")) {
                 return true;
             }
@@ -88,6 +99,18 @@ public class Market
         }
         return false;
     }
+	
+	
+	public static String createChecksum(String msg)  throws NoSuchAlgorithmException
+	{
+		MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(msg.getBytes());
+       byte[] digest = md.digest();
+       String checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
+	   return checksum;
+	}
+	
+	
     public static Boolean processConnect(SelectionKey key) {
         SocketChannel sc = (SocketChannel) key.channel();
         try {
