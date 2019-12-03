@@ -85,7 +85,7 @@ public class Market
             System.out.println("Message received from Server: " + result);
         }
         if (key.isWritable()) {
-            System.out.print("Type a message (type quit to stop): ");
+            System.out.println("Type a message (type quit to stop): ");
             String msg = input.readLine();
 			//generate checksum of msg
 			String checksum = createChecksum(msg);

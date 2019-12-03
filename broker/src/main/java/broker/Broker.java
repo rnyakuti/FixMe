@@ -62,8 +62,18 @@ public class Broker
             System.out.println("Message received from Server: " + result);
         }
         if (key.isWritable()) {
-            System.out.print("Type a message (type quit to stop): ");
+            System.out.println("OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
+			while(true)
+			{
+				
+				if(msg.equalsIgnoreCase("buy") || msg.equalsIgnoreCase("sell"))
+				{
+					break;
+				}
+				System.out.println("OPTIONS [ 'BUY' OR 'SELL' ]");
+				msg = input.readLine();
+			}	
 			//generate checksum of msg
 			String checksum = createChecksum(msg);
 			msg+="-"+checksum;
