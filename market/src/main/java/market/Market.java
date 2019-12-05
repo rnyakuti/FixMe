@@ -46,17 +46,7 @@ public class Market
     }
 	
 	
-	public static String processRead(SelectionKey key) throws Exception {
-      SocketChannel sChannel = (SocketChannel) key.channel();
-      ByteBuffer buffer = ByteBuffer.allocate(1024);
-      sChannel.read(buffer);
-      buffer.flip();
-      Charset charset = Charset.forName("UTF-8");
-      CharsetDecoder decoder = charset.newDecoder();
-      CharBuffer charBuffer = decoder.decode(buffer);
-      String msg = charBuffer.toString();
-      return msg;
-    }
+
 
     public static Boolean processReadySet(Set readySet)
             throws Exception {
