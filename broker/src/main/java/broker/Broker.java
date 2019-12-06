@@ -83,6 +83,13 @@ public class Broker
             SocketChannel sc = (SocketChannel) key.channel();
             ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
             sc.write(bb);
+			   if (key.isReadable()) {
+             sc = (SocketChannel) key.channel();
+            bb = ByteBuffer.allocate(1024);
+            sc.read(bb);
+            String result = new String(bb.array()).trim();
+            System.out.println("Message received from Server: " + result);
+        }
         }
         return false;
     }

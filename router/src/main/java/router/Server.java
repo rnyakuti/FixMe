@@ -31,6 +31,8 @@ public class Server extends Thread {
 	public BufferedReader input = null;
 	protected int brokerID = 100000;//limit  499 999
 	protected int marketID = 500000;//limit is 999 999
+	ServerSocketChannel server;
+	Selector selector;
     public Server(int recievedPort, String cType)
     {
         port = recievedPort;
@@ -81,12 +83,18 @@ public class Server extends Thread {
 		}
 	
 	}
+	
+	protected void parseMessage(String ms)
+	{
+
+	}
+	
     protected  void runServer()
     {
         try
         {
-            Selector selector = Selector.open();
-            ServerSocketChannel server = ServerSocketChannel.open();
+            selector = Selector.open();
+            server = ServerSocketChannel.open();
             server.configureBlocking(false);
             server.bind(new InetSocketAddress("127.0.0.1", port));
             System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + " ..." + CYAN + " ]" + RESET_CO);
@@ -123,11 +131,30 @@ public class Server extends Thread {
 						String [] arrValidate = result.split("-");
 						if( validateChecksum(arrValidate[0], arrValidate[1]))
 						{
-							System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
+							System.out.println(CYAN+(port == 5000? brokerID : marketID)+PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
+							if(arrValidate[0].equalsIgnoreCase("buy") || arrValidate[0].equalsIgnoreCase("sell"))
+						    {
+								
+								    if (key.isAcceptable()) {
+										System.out.println(PURPLE +"parsing 1");
+									//SocketChannel sc = server.accept();
+								   // sc = (SocketChannel) key.channel();
+									sc.configureBlocking(false);
+									sc.register(selector, SelectionKey.OP_READ);
+									System.out.println(PURPLE + componentType+ CYAN + "[ maassssssssss ACCEPTED ]" + sc.getLocalAddress() + "\n"+RESET_CO);
+									//String ID = setConnectionID(componentType);
+									//sendID(componentType,ID,sc);
+					
+									}
+								//parseMessage( result);
+								
+								
+							}
 						}
 						else
 					    {
-							 System.out.println(RED+"Message from "+PURPLE + componentType+RED+" failed checksum and will be disregarded "+RESET_CO);
+							
+							System.out.println(RED+"Message from "+PURPLE + componentType+RED+" failed checksum and will be disregarded "+RESET_CO);
 						}
                         
                         if (result.length() < 0) {

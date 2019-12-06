@@ -18,8 +18,8 @@ public class Market
 {
     private static BufferedReader input = null;
 	    static String message = null;
-  //  private static final Logger logger = Logger.getLogger(MD5Checksum.class.getName());
-  
+ 
+   public static final String[] instruments = {"TypeBread1", "TypeBread2", "TypeBread3", "TypeBread4", "TypeBread5", "TypeBrea6"};
     public static void main(String[] args) throws Exception {
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5001);
         Selector selector = Selector.open();
@@ -45,28 +45,20 @@ public class Market
         sc.close();
     }
 	
-	
-	public static String processRead(SelectionKey key) throws Exception {
-      SocketChannel sChannel = (SocketChannel) key.channel();
-      ByteBuffer buffer = ByteBuffer.allocate(1024);
-      sChannel.read(buffer);
-      buffer.flip();
-      Charset charset = Charset.forName("UTF-8");
-      CharsetDecoder decoder = charset.newDecoder();
-      CharBuffer charBuffer = decoder.decode(buffer);
-      String msg = charBuffer.toString();
-      return msg;
-    }
-
+public static void printInstruments()
+{
+	System.out.println("LIST OF AVAILABLE BREADS TO TRADE");
+	for(int i = 0; i< instruments.length;i++)
+	{
+		System.out.println(i+" - "+instruments[i]);
+	}
+}
     public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
         Iterator iterator = null;
-		//Socket kkSocket = new Socket("127.0.0.1", 5001); 
-		// BufferedReader in = new BufferedReader( new InputStreamReader(kkSocket.getInputStream()));
+	
         iterator = readySet.iterator();
-	//	String fromServer = in.readLine();
-		//  System.out.println(fromServer);
         while (iterator.hasNext()) {
             key = (SelectionKey) iterator.next();
             iterator.remove();
@@ -85,6 +77,7 @@ public class Market
             System.out.println("Message received from Server: " + result);
         }
         if (key.isWritable()) {
+			printInstruments();
             System.out.println("Type a message (type quit to stop): ");
             String msg = input.readLine();
 			//generate checksum of msg
