@@ -98,7 +98,7 @@ public class Server extends Thread {
             server.configureBlocking(false);
             server.bind(new InetSocketAddress("127.0.0.1", port));
             System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + " ..." + CYAN + " ]" + RESET_CO);
-            server.register(selector, SelectionKey.OP_ACCEPT);
+		   server.register(selector, SelectionKey.OP_ACCEPT);
             SelectionKey key = null;
             while (true)
             {
@@ -106,13 +106,13 @@ public class Server extends Thread {
                     continue;
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = selectedKeys.iterator();
+				
                 while (iterator.hasNext())
                 {
                     key = (SelectionKey) iterator.next();
                     iterator.remove();
                     if (key.isAcceptable()) {
                         SocketChannel sc = server.accept();
-					   // sc = (SocketChannel) key.channel();
                         sc.configureBlocking(false);
                         sc.register(selector, SelectionKey.OP_READ);
                         System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ]" + sc.getLocalAddress() + "\n"+RESET_CO);
@@ -120,7 +120,6 @@ public class Server extends Thread {
 						sendID(componentType,ID,sc);
 		
                     }
-					
                     if (key.isReadable())
                     {
                         SocketChannel sc = (SocketChannel) key.channel();
@@ -131,6 +130,7 @@ public class Server extends Thread {
 						String [] arrValidate = result.split("-");
 						if( validateChecksum(arrValidate[0], arrValidate[1]))
 						{
+<<<<<<< HEAD
 							System.out.println(CYAN+(port == 5000? brokerID : marketID)+PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
 							if(arrValidate[0].equalsIgnoreCase("buy") || arrValidate[0].equalsIgnoreCase("sell"))
 						    {
@@ -150,6 +150,16 @@ public class Server extends Thread {
 								
 								
 							}
+=======
+							System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
+							//send to market if type  buy or sell is parsed by server
+							if(componentType.equalsIgnoreCase("broker"))
+						    {
+								ByteBuffer bc = ByteBuffer.wrap(result.getBytes());
+								sc.write(bc);		
+							}
+							 
+>>>>>>> ce9b2a16fa626c349d2080f58383d19024b17d30
 						}
 						else
 					    {

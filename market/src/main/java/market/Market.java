@@ -45,6 +45,7 @@ public class Market
         sc.close();
     }
 	
+<<<<<<< HEAD
 public static void printInstruments()
 {
 	System.out.println("LIST OF AVAILABLE BREADS TO TRADE");
@@ -53,6 +54,11 @@ public static void printInstruments()
 		System.out.println(i+" - "+instruments[i]);
 	}
 }
+=======
+	
+
+
+>>>>>>> ce9b2a16fa626c349d2080f58383d19024b17d30
     public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
