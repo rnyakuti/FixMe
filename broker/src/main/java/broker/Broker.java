@@ -14,7 +14,8 @@ import javax.xml.bind.DatatypeConverter;
 public class Broker
 {
     private static BufferedReader input = null;
-	
+	protected SocketChannel client;
+	protected ArrayList<String> messages = new ArrayList<>();
 	
     public static void main(String[] args) throws Exception {
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5000);
@@ -102,6 +103,8 @@ public class Broker
        String checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
 	   return checksum;
 	}
+	
+	
 	
 	
     public static Boolean processConnect(SelectionKey key) {

@@ -17,9 +17,8 @@ import javax.xml.bind.DatatypeConverter;
 public class Market
 {
     private static BufferedReader input = null;
-	    static String message = null;
- 
-   public static final String[] instruments = {"TypeBread1", "TypeBread2", "TypeBread3", "TypeBread4", "TypeBread5", "TypeBrea6"};
+	static String message = null;
+   public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
     public static void main(String[] args) throws Exception {
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5001);
         Selector selector = Selector.open();
@@ -80,17 +79,18 @@ public static void printInstruments()
         }
         if (key.isWritable()) {
 			printInstruments();
-            System.out.println("Type a message (type quit to stop): ");
+			//Market cannot write to router from cmd
+            //System.out.println("Type a message (type quit to stop): ");
             String msg = input.readLine();
 			//generate checksum of msg
 			String checksum = createChecksum(msg);
 			msg+="-"+checksum;
             if (msg.equalsIgnoreCase("quit")) {
-                return true;
+               System.exit(0);
             }
-            SocketChannel sc = (SocketChannel) key.channel();
-            ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
-            sc.write(bb);
+            //SocketChannel sc = (SocketChannel) key.channel();
+            //ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
+            //sc.write(bb);
         }
         return false;
     }
