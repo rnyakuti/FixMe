@@ -130,7 +130,6 @@ public class Server extends Thread {
 						String [] arrValidate = result.split("-");
 						if( validateChecksum(arrValidate[0], arrValidate[1]))
 						{
-<<<<<<< HEAD
 							System.out.println(CYAN+(port == 5000? brokerID : marketID)+PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
 							if(arrValidate[0].equalsIgnoreCase("buy") || arrValidate[0].equalsIgnoreCase("sell"))
 						    {
@@ -150,7 +149,6 @@ public class Server extends Thread {
 								
 								
 							}
-=======
 							System.out.println(PURPLE + componentType+YELLOW+"[ Message received: " + result + " ]"+RESET_CO);
 							//send to market if type  buy or sell is parsed by server
 							if(componentType.equalsIgnoreCase("broker"))
@@ -158,8 +156,6 @@ public class Server extends Thread {
 								ByteBuffer bc = ByteBuffer.wrap(result.getBytes());
 								sc.write(bc);		
 							}
-							 
->>>>>>> ce9b2a16fa626c349d2080f58383d19024b17d30
 						}
 						else
 					    {
