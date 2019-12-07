@@ -18,8 +18,25 @@ public class Market
 {
     private static BufferedReader input = null;
 	static String message = null;
-   public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
-    public static void main(String[] args) throws Exception {
+    public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
+    String ID = "null";
+	/**********************************************/
+
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String RESET_CO = "\u001B[0m";
+
+    /*********************************************/
+	
+	
+	public static void main(String[] args) throws Exception 
+	{
+		
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5001);
         Selector selector = Selector.open();
         SocketChannel sc = SocketChannel.open();
@@ -46,10 +63,10 @@ public class Market
 
 public static void printInstruments()
 {
-	System.out.println("LIST OF AVAILABLE BREADS TO TRADE");
+	System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
 	for(int i = 0; i< instruments.length;i++)
 	{
-		System.out.println(i+" - "+instruments[i]);
+		System.out.println(GREEN+" [ "+instruments[i]+" ]"+RESET_CO);
 	}
 }
 
@@ -66,6 +83,17 @@ public static void printInstruments()
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
+		    SocketChannel sc;
+            ByteBuffer bb;
+            String result = "";
+			while(result.isEmpty())
+			{
+			   sc = (SocketChannel) key.channel();
+               bb = ByteBuffer.allocate(1024);
+               sc.read(bb);
+               result = new String(bb.array()).trim();
+			}
+            System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
             if (!connected) {
                 return true;
             }
@@ -75,7 +103,7 @@ public static void printInstruments()
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
             String result = new String(bb.array()).trim();
-            System.out.println("Message received from Server: " + result);
+            System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
         }
         if (key.isWritable()) {
 			printInstruments();
@@ -98,6 +126,7 @@ public static void printInstruments()
 	
 	public static String createChecksum(String msg)  throws NoSuchAlgorithmException
 	{
+		//FIX NOTATION
 		MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(msg.getBytes());
        byte[] digest = md.digest();

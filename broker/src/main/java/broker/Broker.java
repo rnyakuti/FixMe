@@ -17,7 +17,22 @@ public class Broker
 	protected SocketChannel client;
 	protected ArrayList<String> messages = new ArrayList<>();
 	
+	/**********************************************/
+
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String RESET_CO = "\u001B[0m";
+
+    /*********************************************/
+	
+	
     public static void main(String[] args) throws Exception {
+		
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 5000);
         Selector selector = Selector.open();
         SocketChannel sc = SocketChannel.open();
@@ -51,6 +66,17 @@ public class Broker
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
+			 SocketChannel sc;
+            ByteBuffer bb;
+            String result ="";
+			while(result.isEmpty())
+			{
+			   sc = (SocketChannel) key.channel();
+               bb = ByteBuffer.allocate(1024);
+               sc.read(bb);
+               result = new String(bb.array()).trim();
+			}
+			System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
             if (!connected) {
                 return true;
             }
@@ -60,10 +86,10 @@ public class Broker
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
             String result = new String(bb.array()).trim();
-            System.out.println("Message received from Server: " + result);
+            System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
         }
         if (key.isWritable()) {
-            System.out.println("OPTIONS [ 'BUY' OR 'SELL']\n");
+            System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
 			while(true)
 			{
@@ -72,7 +98,7 @@ public class Broker
 				{
 					break;
 				}
-				System.out.println("OPTIONS [ 'BUY' OR 'SELL' ]");
+				System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL' ]");
 				msg = input.readLine();
 			}	
 			//generate checksum of msg
@@ -84,13 +110,6 @@ public class Broker
             SocketChannel sc = (SocketChannel) key.channel();
             ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
             sc.write(bb);
-			   if (key.isReadable()) {
-             sc = (SocketChannel) key.channel();
-            bb = ByteBuffer.allocate(1024);
-            sc.read(bb);
-            String result = new String(bb.array()).trim();
-            System.out.println("Message received from Server: " + result);
-        }
         }
         return false;
     }

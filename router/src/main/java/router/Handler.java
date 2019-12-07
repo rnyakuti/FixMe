@@ -21,6 +21,20 @@ public class Handler extends Thread {
 	private String id;
 	private String componentType;
 	private boolean runningClient;
+	
+	/**********************************************/
+
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String RESET_CO = "\u001B[0m";
+
+    /*********************************************/
+	
 
 	public Handler(SocketChannel socket, int clientListSize ,List<String> messages, int port, String id, String componentType){
 		this.socket = socket;
@@ -55,7 +69,7 @@ public class Handler extends Thread {
 					ByteBuffer buffer = ByteBuffer.allocate(1024);
 					socket.read(buffer);
 					String cmsg =  new String(buffer.array()).trim();
-					System.out.println("Message from "+componentType +" "+ this.id + ": "	+cmsg);//fix componentType, change run
+				System.out.println(GREEN+"Message from : "+PURPLE+componentType +YELLOW+" ID : "+GREEN+ this.id +CYAN+"  [ "+cmsg+"]"+RESET_CO);
 					
 					if (this.runningClient && !cmsg.isEmpty()) {
 						messages.add(cmsg);
@@ -66,7 +80,8 @@ public class Handler extends Thread {
 			}
 
 		} catch (IOException e){
-			System.out.println("something went wrong");
+			System.out.println(RED+"DISCONNECTED FROM "+PURPLE+componentType +YELLOW+" ID : "+GREEN+ this.id);
+			System.out.println(GREEN+"SERVER IS STILL RUNNING ...");
 		} 
 	  }
 	

@@ -40,8 +40,8 @@ public class Server extends Thread {
 	
     public Server(int recievedPort, String cType)
     {
-        port = recievedPort;
-        componentType = cType;
+        this.port = recievedPort;
+        this.componentType = cType;
 		clientList = new ArrayList<Handler>();
     }
 
@@ -94,13 +94,13 @@ public class Server extends Thread {
         try
         {
 			ServerSocketChannel server = ServerSocketChannel.open().bind(new InetSocketAddress("127.0.0.1", port));
-            System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + " ..." + CYAN + " ]" + RESET_CO);
+            System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
 		   String ID = setConnectionID(componentType);
 		   while(true){
 			
 				SocketChannel sc = server.accept();
 				Handler socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
-                System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ]"+ "\n"+RESET_CO);
+                System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
 				clientList.add(socketHandlerAsync);
 				socketHandlerAsync.start();
 		   }
