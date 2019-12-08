@@ -47,21 +47,6 @@ public class Server extends Thread {
 		clientList = new ArrayList<Handler>();
     }
 
-	protected void sendID(String componentType,String ID, SocketChannel sc)
-	{
-		   
-			try
-			{
-				 ByteBuffer bc = ByteBuffer.wrap(ID.getBytes());
-				sc.write(bc);
-			}
-			catch (IOException e)
-			{
-				System.out.println(PURPLE + componentType+RED+" FAILED TO ASSIGN ID"+RESET_CO);
-			}
-			 System.out.println(PURPLE + componentType+YELLOW+" [ ROUTER ASSIGNED ID " +ID+ " ]"+RESET_CO);
-			      
-	}
 	
 	private String setConnectionID(String componentType)
 	{
@@ -116,24 +101,7 @@ public class Server extends Thread {
         }
     }
 	
-	
-	public static boolean validateChecksum(String msg, String checksum)  throws NoSuchAlgorithmException 
-	{
-   
-		MessageDigest md = MessageDigest.getInstance("MD5");
-		md.update(msg.getBytes());
-		byte[] digest = md.digest();
-		String newChecksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
-		 if(newChecksum.equals(checksum))
-		 {
-			 return true;
-		 }
-		 else
-		 {
-			 return false;
-		 }
 
-	}
 	
 	public void sendMessage(String str) 
 	{

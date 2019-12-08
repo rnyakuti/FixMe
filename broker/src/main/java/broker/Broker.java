@@ -63,12 +63,19 @@ public static String setFixNotation(int price, int quantity)
 {
 	String fixNotation = "";
 	ZonedDateTime time= ZonedDateTime.now(ZoneOffset.UTC);
-	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time; //String.format("35=D|49=%s|56=%s|52=%s|11=%d|21=1|55=D|54=1|60=%s|38=%s|40=1|44=%s|39=0|",ID, time, quantity, price);
-	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|"+fixNotation+"|10=|need to get checksum";//need to get checksum
+	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time;
+	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|"+fixNotation+"|10="+getChecksum(ByteBuffer.wrap(fixNotation.getBytes()), fixNotation.length())+"|";
 	return fixNotation;
 }
 
-
+public static String getChecksum(ByteBuffer a, int b)
+{
+	int checksum = 0;
+		for (int i = 0; i < b; i++) {
+			checksum += a.get(i);
+		}
+		return checksum % 256+"";
+}
     public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
