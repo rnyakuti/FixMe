@@ -9,14 +9,18 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
-
+import  java.lang.String;
 public class Broker
 {
     private static BufferedReader input = null;
 	protected SocketChannel client;
 	protected ArrayList<String> messages = new ArrayList<>();
-	
+	public static String ID ="";
+	  
 	/**********************************************/
 
     public static final String RED = "\u001B[31m";
@@ -55,6 +59,16 @@ public class Broker
         sc.close();
     }
 
+public static String setFixNotation(int price, int quantity)
+{
+	String fixNotation = "";
+	ZonedDateTime time= ZonedDateTime.now(ZoneOffset.UTC);
+	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time; //String.format("35=D|49=%s|56=%s|52=%s|11=%d|21=1|55=D|54=1|60=%s|38=%s|40=1|44=%s|39=0|",ID, time, quantity, price);
+	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|"+fixNotation+"|10=|need to get checksum";//need to get checksum
+	return fixNotation;
+}
+
+
     public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
@@ -77,6 +91,7 @@ public class Broker
                result = new String(bb.array()).trim();
 			}
 			System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
+			ID = result;
             if (!connected) {
                 return true;
             }
@@ -102,8 +117,9 @@ public class Broker
 				msg = input.readLine();
 			}	
 			//generate checksum of msg
-			String checksum = createChecksum(msg);
-			msg+="-"+checksum;
+			msg = setFixNotation(10, 10);
+			//String checksum = createChecksum(msg);
+			//msg+="-"+checksum;
             if (msg.equalsIgnoreCase("quit")) {
                 return true;
             }

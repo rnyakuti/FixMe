@@ -6,13 +6,18 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
 
 public class Router
 {
 
     public static final int brokerPort = 5000;
     public static final int marketPort = 5001;
+	
+	static private String brokerMessages = "";
+	
     /*Colours*/
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
@@ -25,10 +30,25 @@ public class Router
 
      public static void main(String[] args) {
 
-         Server brokerAscyn = new Server(brokerPort, "BROKER");
-         brokerAscyn.start();
-         Server marketAscyn = new Server(marketPort, "MARKET");
-         marketAscyn.start();
+         Server broker= new Server(brokerPort, "BROKER");
+         broker.start();
+         Server market = new Server(marketPort, "MARKET");
+         market.start();
+		 
+		    while (true) {
+            try {
+                
+                brokerMessages = broker.getMessages();
+			    System.out.println( "Broker Server Port:5000 msg:"+brokerMessages);
+				market.sendMessage(brokerMessages);
+				 brokerMessages = "";
+			}
+			catch(Exception e)
+			{
+				
+			}
+			
+			}
 
      }
 }

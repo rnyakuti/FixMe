@@ -43,6 +43,7 @@ public class Handler extends Thread {
 		this.runningClient = true;
 		this.componentType = componentType;
 		sendMessage(id + " ");
+		System.out.println("Socket handle");
 	}
 	
 	public void sendMessage(String message){
@@ -50,6 +51,7 @@ public class Handler extends Thread {
 			if (this.runningClient) {
 				ByteBuffer msgBuffer = ByteBuffer.allocate(message.length());
 				msgBuffer.wrap(message.getBytes());
+				System.out.println(message);
 				socket.write(msgBuffer.wrap(message.getBytes())); 
 			} else {
 				System.out.println(getClass().getSimpleName()+"Closed : "+runningClient);
@@ -59,7 +61,18 @@ public class Handler extends Thread {
 			System.out.println(getClass().getSimpleName()+" Server freaked out");
 		}
 	}
+	public String getMessages() 
+	{
+		
+		String ret = messages.get(0);
+		updateMessages();
+		return ret;
+	}
 	
+	public void updateMessages()
+	{
+		messages.remove(0);
+	}
 	  protected  void runServer()
 	  {
 		  try {

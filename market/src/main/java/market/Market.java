@@ -19,7 +19,7 @@ public class Market
     private static BufferedReader input = null;
 	static String message = null;
     public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
-    String ID = "null";
+    public static String ID ="";
 	/**********************************************/
 
     public static final String RED = "\u001B[31m";
@@ -71,6 +71,7 @@ public static void printInstruments()
 }
 
 
+
     public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
@@ -94,6 +95,7 @@ public static void printInstruments()
                result = new String(bb.array()).trim();
 			}
             System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
+			ID = result;
             if (!connected) {
                 return true;
             }

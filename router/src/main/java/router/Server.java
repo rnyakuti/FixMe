@@ -17,8 +17,9 @@ public class Server extends Thread {
 
 	private List<Handler> clientList;
 	private ArrayList<String> messages = new ArrayList<String>();
-
-
+	public Handler socketHandlerAsync = null;
+	public ServerSocketChannel server = null;
+	SocketChannel sc;
     /**********************************************/
 
     public static final String RED = "\u001B[31m";
@@ -33,6 +34,7 @@ public class Server extends Thread {
     /*********************************************/
     public int port;
     public String componentType;
+	String ID = "";
 	public BufferedReader input = null;
 	protected int brokerID = 100000;//limit  499 999
 	protected int marketID = 500000;//limit is 999 999
@@ -93,13 +95,15 @@ public class Server extends Thread {
     {
         try
         {
-			ServerSocketChannel server = ServerSocketChannel.open().bind(new InetSocketAddress("127.0.0.1", port));
+			server = ServerSocketChannel.open().bind(new InetSocketAddress("127.0.0.1", port));
             System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
 		   String ID = setConnectionID(componentType);
+		   this.ID = ID;
+		   
 		   while(true){
 			
-				SocketChannel sc = server.accept();
-				Handler socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
+				sc = server.accept();
+				socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
                 System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
 				clientList.add(socketHandlerAsync);
 				socketHandlerAsync.start();
@@ -129,6 +133,20 @@ public class Server extends Thread {
 			 return false;
 		 }
 
+	}
+	
+	public void sendMessage(String str) 
+	{
+		
+			messages.add(str);
+			socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
+		
+	}
+
+	public String getMessages() {
+		//
+		
+		return socketHandlerAsync.getMessages();
 	}
 
     @Override
