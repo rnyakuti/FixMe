@@ -84,7 +84,7 @@ public static void printInstruments()
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
-		    SocketChannel sc;
+		    /*SocketChannel sc;
             ByteBuffer bb;
             String result = "";
 			while(result.isEmpty())
@@ -95,7 +95,7 @@ public static void printInstruments()
                result = new String(bb.array()).trim();
 			}
             System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
-			ID = result;
+			ID = result;*/
             if (!connected) {
                 return true;
             }

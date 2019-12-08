@@ -80,7 +80,7 @@ public static String setFixNotation(int price, int quantity)
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
-			 SocketChannel sc;
+			/* SocketChannel sc;
             ByteBuffer bb;
             String result ="";
 			while(result.isEmpty())
@@ -91,7 +91,7 @@ public static String setFixNotation(int price, int quantity)
                result = new String(bb.array()).trim();
 			}
 			System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
-			ID = result;
+			ID = result;*/
             if (!connected) {
                 return true;
             }

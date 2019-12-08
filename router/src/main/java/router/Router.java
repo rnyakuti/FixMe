@@ -17,6 +17,7 @@ public class Router
     public static final int marketPort = 5001;
 	
 	static private String brokerMessages = "";
+	static private String marketMessages = "";
 	
     /*Colours*/
     public static final String RED = "\u001B[31m";
@@ -39,9 +40,11 @@ public class Router
             try {
                 
                 brokerMessages = broker.getMessages();
+			  //  marketMessages = market.getMessages();
 			    System.out.println( "Broker Server Port:5000 msg:"+brokerMessages);
 				market.sendMessage(brokerMessages);
-				 brokerMessages = "";
+				brokerMessages = "";
+				 
 			}
 			catch(Exception e)
 			{

@@ -140,7 +140,7 @@ public class Server extends Thread {
 		
 			messages.add(str);
 			socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
-		
+			socketHandlerAsync.sendMessage(str);
 	}
 
 	public String getMessages() {
