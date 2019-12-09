@@ -39,10 +39,29 @@ public class Router
 		    while (true) {
             try {
                 
-                brokerMessages = broker.getMessages();
-				market.sendMessage(brokerMessages);
-				brokerMessages = "";
-				 
+               brokerMessages = broker.getMessages();	
+                if(brokerMessages.isEmpty())
+				{	
+					System.out.println("nothing to send");	
+				}
+				else
+				{
+					market.sendMessage(brokerMessages);
+					brokerMessages = "";
+				}
+				TimeUnit.SECONDS.sleep(1);
+				marketMessages = market.getMessages();
+				if(marketMessages.equalsIgnoreCase("rejected"))
+				{
+					System.out.println("rejected yeet send");
+					broker.sendMessage(marketMessages);
+					marketMessages = "";
+				}
+				else
+				{
+					System.out.println("nope");
+				}
+
 			}
 			catch(Exception e)
 			{

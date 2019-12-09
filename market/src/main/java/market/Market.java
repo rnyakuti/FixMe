@@ -103,6 +103,8 @@ public static void printInstruments()
 			else
 			{
 				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+				 System.out.println("Handling request");
+				  handleRequest(key);
 			}
         }
 		
@@ -124,7 +126,21 @@ public static void printInstruments()
         return false;
     }
 	
-	
+	public static void handleRequest( SelectionKey key)
+	{
+		try
+		{
+			String msg = "rejected";
+			SocketChannel sc = (SocketChannel) key.channel();
+			ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
+			sc.write(bb);
+		}
+		catch(IOException e)
+		{
+			
+		}
+		
+	}
 	public static String createChecksum(String msg)  throws NoSuchAlgorithmException
 	{
 		//FIX NOTATION
