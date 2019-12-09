@@ -45,8 +45,8 @@ public class Market
         sc.register(selector, SelectionKey.OP_CONNECT |
                 SelectionKey.OP_READ | SelectionKey.
                 OP_WRITE);
-        input = new BufferedReader(new
-                InputStreamReader(System.in));
+        input = new BufferedReader(new InputStreamReader(System.in));
+		printInstruments();
         while (true) {
             if (selector.select() > 0) {
 				
@@ -84,18 +84,6 @@ public static void printInstruments()
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
-		    /*SocketChannel sc;
-            ByteBuffer bb;
-            String result = "";
-			while(result.isEmpty())
-			{
-			   sc = (SocketChannel) key.channel();
-               bb = ByteBuffer.allocate(1024);
-               sc.read(bb);
-               result = new String(bb.array()).trim();
-			}
-            System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
-			ID = result;*/
             if (!connected) {
                 return true;
             }
@@ -107,7 +95,8 @@ public static void printInstruments()
             String result = new String(bb.array()).trim();
             System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
         }
-        if (key.isWritable()) {
+		
+       /* if (key.isWritable()) {
 			printInstruments();
 			//Market cannot write to router from cmd
             //System.out.println("Type a message (type quit to stop): ");
@@ -121,7 +110,7 @@ public static void printInstruments()
             //SocketChannel sc = (SocketChannel) key.channel();
             //ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
             //sc.write(bb);
-        }
+        }*/
         return false;
     }
 	

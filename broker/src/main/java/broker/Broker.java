@@ -59,12 +59,12 @@ public class Broker
         sc.close();
     }
 
-public static String setFixNotation(int price, int quantity)
+public static String setFixNotation(int price, int quantity, int buyOrSell)
 {
 	String fixNotation = "";
 	ZonedDateTime time= ZonedDateTime.now(ZoneOffset.UTC);
-	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time;
-	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|"+fixNotation+"|10="+getChecksum(ByteBuffer.wrap(fixNotation.getBytes()), fixNotation.length())+"|";
+	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time+"|55=D|54="+buyOrSell+"|60=1|38="+quantity+"|40=1|44="+price+"|39=1";
+	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|11=ORDERID|21=1|"+fixNotation+"|10="+getChecksum(ByteBuffer.wrap(fixNotation.getBytes()), fixNotation.length())+"|";
 	return fixNotation;
 }
 
@@ -74,7 +74,19 @@ public static String getChecksum(ByteBuffer a, int b)
 		for (int i = 0; i < b; i++) {
 			checksum += a.get(i);
 		}
-		return checksum % 256+"";
+		checksum = checksum%256;
+		if(checksum < 10)
+		{
+			return "00"+checksum;
+		}
+		else if(checksum < 100)
+		{
+			return "0"+checksum;
+		}
+		else
+		{
+			return checksum % 256+"";
+		}
 }
     public static Boolean processReadySet(Set readySet)
             throws Exception {
@@ -87,18 +99,6 @@ public static String getChecksum(ByteBuffer a, int b)
         }
         if (key.isConnectable()) {
             Boolean connected = processConnect(key);
-			/* SocketChannel sc;
-            ByteBuffer bb;
-            String result ="";
-			while(result.isEmpty())
-			{
-			   sc = (SocketChannel) key.channel();
-               bb = ByteBuffer.allocate(1024);
-               sc.read(bb);
-               result = new String(bb.array()).trim();
-			}
-			System.out.println(GREEN+"ASSIGNED ID: "+CYAN+"[ " + result+" ]");
-			ID = result;*/
             if (!connected) {
                 return true;
             }
@@ -113,6 +113,8 @@ public static String getChecksum(ByteBuffer a, int b)
         if (key.isWritable()) {
             System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
+			int quantity = 0;
+			int price = 0;
 			while(true)
 			{
 				
@@ -123,10 +125,33 @@ public static String getChecksum(ByteBuffer a, int b)
 				System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL' ]");
 				msg = input.readLine();
 			}	
-			//generate checksum of msg
-			msg = setFixNotation(10, 10);
-			//String checksum = createChecksum(msg);
-			//msg+="-"+checksum;
+			
+			while(true)
+			{
+				if(quantity > 0)
+				{
+					break;
+				}
+				quantity = getQuantity();
+			}
+			while(true)
+			{
+				if(price > 0)
+				{
+					break;
+				}
+				price = getPrice();
+			}
+			
+			if(msg.equalsIgnoreCase("buy"))
+			{
+				
+				msg = setFixNotation(price, quantity,1);
+			}
+			else
+			{
+				msg = setFixNotation(price, quantity,2);
+			}
             if (msg.equalsIgnoreCase("quit")) {
                 return true;
             }
@@ -137,16 +162,38 @@ public static String getChecksum(ByteBuffer a, int b)
         return false;
     }
 	
-	public static String createChecksum(String msg)  throws NoSuchAlgorithmException
+	
+	public static int getPrice()
 	{
-		MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(msg.getBytes());
-       byte[] digest = md.digest();
-       String checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
-	   return checksum;
+		
+		try
+		{	
+			System.out.println("At what price [1 -10000]");
+			int ret = Integer.parseInt(input.readLine());
+			return ret;
+			
+		}
+		catch(IOException e)
+		{
+			System.out.println("yeet");
+		}
+		return 0;
 	}
 	
-	
+	public static int getQuantity()
+	{
+		try
+		{	System.out.println("Quantity of bread [1 -10000]");
+			int ret = Integer.parseInt(input.readLine());
+			return ret;
+			
+		}
+		catch(IOException e)
+		{
+			System.out.println("yeet");
+		}
+		return 0;
+	}
 	
 	
     public static Boolean processConnect(SelectionKey key) {

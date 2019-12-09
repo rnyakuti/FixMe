@@ -43,7 +43,6 @@ public class Handler extends Thread {
 		this.runningClient = true;
 		this.componentType = componentType;
 		sendMessage(id + " ");
-		System.out.println("Socket handle");
 	}
 	
 	public void sendMessage(String message){

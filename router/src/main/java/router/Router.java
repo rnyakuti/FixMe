@@ -40,8 +40,6 @@ public class Router
             try {
                 
                 brokerMessages = broker.getMessages();
-			  //  marketMessages = market.getMessages();
-			    System.out.println( "Broker Server Port:5000 msg:"+brokerMessages);
 				market.sendMessage(brokerMessages);
 				brokerMessages = "";
 				 
