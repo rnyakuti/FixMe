@@ -108,7 +108,15 @@ public static String getChecksum(ByteBuffer a, int b)
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
             String result = new String(bb.array()).trim();
-            System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+           if(ID.isEmpty())
+			{
+				ID = result;
+				System.out.println(GREEN+"Assigned ID: "+CYAN+"[ " +ID+" ]");
+			}
+			else
+			{
+				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+			}
         }
         if (key.isWritable()) {
             System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");

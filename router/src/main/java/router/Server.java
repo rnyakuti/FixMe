@@ -81,7 +81,7 @@ public class Server extends Thread {
         try
         {
 			server = ServerSocketChannel.open().bind(new InetSocketAddress("127.0.0.1", port));
-            System.out.println(PURPLE + componentType + " " + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
+            System.out.println(YELLOW+"[SERVER]" + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
 		   String ID = setConnectionID(componentType);
 		   this.ID = ID;
 		   

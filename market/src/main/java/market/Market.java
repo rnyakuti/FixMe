@@ -19,6 +19,7 @@ public class Market
     private static BufferedReader input = null;
 	static String message = null;
     public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
+	 public static final int[] invetory = {30, 60, 90, 120,150, 180};
     public static String ID ="";
 	/**********************************************/
 
@@ -93,7 +94,16 @@ public static void printInstruments()
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
             String result = new String(bb.array()).trim();
-            System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+           
+			if(ID.isEmpty())
+			{
+				ID = result;
+				System.out.println(GREEN+"Assigned ID: "+CYAN+"[ " +ID+" ]");
+			}
+			else
+			{
+				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+			}
         }
 		
        /* if (key.isWritable()) {
