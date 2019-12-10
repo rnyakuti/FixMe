@@ -88,6 +88,7 @@ public class Handler extends Thread {
 					}
 					buffer.flip();
 					buffer.clear();
+					 
 				}
 			}
 

@@ -84,15 +84,12 @@ public class Server extends Thread {
             System.out.println(YELLOW+"[SERVER]" + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
 		   String ID = setConnectionID(componentType);
 		   this.ID = ID;
-		   
-		   while(true){
-			
-				sc = server.accept();
-				socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
-                System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
-				clientList.add(socketHandlerAsync);
-				socketHandlerAsync.start();
-		   }
+		   sc = server.accept();
+		   socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
+           System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
+		   clientList.add(socketHandlerAsync);
+		   socketHandlerAsync.start();
+		  
 		   
         }
         catch (IOException e)
@@ -106,8 +103,7 @@ public class Server extends Thread {
 	public void sendMessage(String str) 
 	{
 		
-			messages.add(str);
-			socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
+			//messages.add(str);
 			socketHandlerAsync.sendMessage(str);
 	}
 

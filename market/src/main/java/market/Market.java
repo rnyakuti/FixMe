@@ -104,7 +104,7 @@ public static void printInstruments()
 			{
 				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
 				 System.out.println("Handling request");
-				  handleRequest(key);
+				  handleRequest(key,result);
 			}
         }
 		
@@ -126,11 +126,11 @@ public static void printInstruments()
         return false;
     }
 	
-	public static void handleRequest( SelectionKey key)
+	public static void handleRequest( SelectionKey key, String ret)
 	{
 		try
 		{
-			String msg = "rejected";
+			String msg = "rejected [tab] "+ret;
 			SocketChannel sc = (SocketChannel) key.channel();
 			ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
 			sc.write(bb);

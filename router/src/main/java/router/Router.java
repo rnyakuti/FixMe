@@ -49,17 +49,18 @@ public class Router
 					market.sendMessage(brokerMessages);
 					brokerMessages = "";
 				}
-				TimeUnit.SECONDS.sleep(1);
+				
 				marketMessages = market.getMessages();
-				if(marketMessages.equalsIgnoreCase("rejected"))
+				if(marketMessages.isEmpty())
+				{
+					System.out.println("nope");
+					
+				}
+				else
 				{
 					System.out.println("rejected yeet send");
 					broker.sendMessage(marketMessages);
 					marketMessages = "";
-				}
-				else
-				{
-					System.out.println("nope");
 				}
 
 			}

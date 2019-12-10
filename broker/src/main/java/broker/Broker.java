@@ -117,8 +117,12 @@ public static String getChecksum(ByteBuffer a, int b)
 			{
 				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
 			}
+			
+			
         }
         if (key.isWritable()) {
+			
+			//need to fix on how it get market messages later 
             System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
 			int quantity = 0;
