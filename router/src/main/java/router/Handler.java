@@ -50,14 +50,14 @@ public class Handler extends Thread {
 			if (this.runningClient) {
 				ByteBuffer msgBuffer = ByteBuffer.allocate(message.length());
 				msgBuffer.wrap(message.getBytes());
-				System.out.println(message);
+				//System.out.println(message);
 				socket.write(msgBuffer.wrap(message.getBytes())); 
 			} else {
 				System.out.println(getClass().getSimpleName()+"Closed : "+runningClient);
 			}
 		}
 		catch (IOException e){
-			System.out.println(getClass().getSimpleName()+" Server freaked out");
+			System.out.println(RED+" No market avalaible, please connect a market");
 		}
 	}
 	public String getMessages() 
@@ -72,9 +72,13 @@ public class Handler extends Thread {
 	{
 		messages.remove(0);
 	}
-	  protected  void runServer()
-	  {
-		  try {
+	
+	
+	
+	
+	@Override
+	public void run() {
+		try {
 			while(this.runningClient){
 				if ((socket!= null) && (socket.isOpen()) && this.runningClient) {
 
@@ -88,6 +92,7 @@ public class Handler extends Thread {
 					}
 					buffer.flip();
 					buffer.clear();
+					
 					 
 				}
 			}
@@ -96,13 +101,7 @@ public class Handler extends Thread {
 			System.out.println(RED+"DISCONNECTED FROM "+PURPLE+componentType +YELLOW+" ID : "+GREEN+ this.id);
 			System.out.println(GREEN+"SERVER IS STILL RUNNING ...");
 		} 
-	  }
-	
-	
-	
-	@Override
-	public void run() {
-		runServer();
+		
 	}
 
 	

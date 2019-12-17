@@ -40,6 +40,8 @@ public class Router
             try {
                 
                brokerMessages = broker.getMessages();	
+			  
+			   
                 if(brokerMessages.isEmpty())
 				{	
 					System.out.println("nothing to send");	
@@ -50,7 +52,8 @@ public class Router
 					brokerMessages = "";
 				}
 				
-				marketMessages = market.getMessages();
+				 marketMessages = market.getMessages();
+			   
 				if(marketMessages.isEmpty())
 				{
 					System.out.println("nope");

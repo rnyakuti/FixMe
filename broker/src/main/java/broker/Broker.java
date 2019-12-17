@@ -68,27 +68,28 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 	return fixNotation;
 }
 
-public static String getChecksum(ByteBuffer a, int b)
-{
-	int checksum = 0;
-		for (int i = 0; i < b; i++) {
-			checksum += a.get(i);
-		}
-		checksum = checksum%256;
-		if(checksum < 10)
-		{
-			return "00"+checksum;
-		}
-		else if(checksum < 100)
-		{
-			return "0"+checksum;
-		}
-		else
-		{
-			return checksum % 256+"";
-		}
-}
-    public static Boolean processReadySet(Set readySet)
+	public static String getChecksum(ByteBuffer a, int b)
+	{
+		int checksum = 0;
+			for (int i = 0; i < b; i++) {
+				checksum += a.get(i);
+			}
+			checksum = checksum%256;
+			if(checksum < 10)
+			{
+				return "00"+checksum;
+			}
+			else if(checksum < 100)
+			{
+				return "0"+checksum;
+			}
+			else
+			{
+				return checksum % 256+"";
+			}
+	}
+	
+	public static Boolean processReadySet(Set readySet)
             throws Exception {
         SelectionKey key = null;
         Iterator iterator = null;
@@ -103,7 +104,8 @@ public static String getChecksum(ByteBuffer a, int b)
                 return true;
             }
         }
-        if (key.isReadable()) {
+        if (key.isReadable()) 
+		{
             SocketChannel sc = (SocketChannel) key.channel();
             ByteBuffer bb = ByteBuffer.allocate(1024);
             sc.read(bb);
@@ -112,18 +114,23 @@ public static String getChecksum(ByteBuffer a, int b)
 			{
 				ID = result;
 				System.out.println(GREEN+"Assigned ID: "+CYAN+"[ " +ID+" ]");
+				outOptions(sc,bb );	
 			}
 			else
 			{
-				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");	
 			}
+			outOptions(sc,bb );
 			
-			
-        }
-        if (key.isWritable()) {
-			
-			//need to fix on how it get market messages later 
-            System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
+        }    
+        return false;
+    }
+	
+	
+	public static void outOptions( SocketChannel sc,ByteBuffer bb )
+	{
+		  try{
+		System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
 			int quantity = 0;
 			int price = 0;
@@ -164,16 +171,16 @@ public static String getChecksum(ByteBuffer a, int b)
 			{
 				msg = setFixNotation(price, quantity,2);
 			}
-            if (msg.equalsIgnoreCase("quit")) {
-                return true;
-            }
-            SocketChannel sc = (SocketChannel) key.channel();
-            ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
+			
+            bb = ByteBuffer.wrap(msg.getBytes());
             sc.write(bb);
-        }
-        return false;
-    }
-	
+		  }	
+		  catch(IOException e)
+		  {
+			  
+		  }
+			
+	}
 	
 	public static int getPrice()
 	{

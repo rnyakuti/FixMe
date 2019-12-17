@@ -108,21 +108,6 @@ public static void printInstruments()
 			}
         }
 		
-       /* if (key.isWritable()) {
-			printInstruments();
-			//Market cannot write to router from cmd
-            //System.out.println("Type a message (type quit to stop): ");
-            String msg = input.readLine();
-			//generate checksum of msg
-			String checksum = createChecksum(msg);
-			msg+="-"+checksum;
-            if (msg.equalsIgnoreCase("quit")) {
-               System.exit(0);
-            }
-            //SocketChannel sc = (SocketChannel) key.channel();
-            //ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
-            //sc.write(bb);
-        }*/
         return false;
     }
 	
