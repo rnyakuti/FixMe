@@ -20,7 +20,7 @@ public class Broker
 	protected SocketChannel client;
 	protected ArrayList<String> messages = new ArrayList<>();
 	public static String ID ="";
-	  
+	 public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};  
 	/**********************************************/
 
     public static final String RED = "\u001B[31m";
@@ -127,13 +127,24 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
     }
 	
 	
+	public static void printInstruments()
+{
+	System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
+	for(int i = 0; i< instruments.length;i++)
+	{
+		System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
+	}
+}
+	
+	
 	public static void outOptions( SocketChannel sc,ByteBuffer bb )
 	{
 		  try{
-		System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
+			System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL']\n");
             String msg = input.readLine();
 			int quantity = 0;
 			int price = 0;
+			String item = "";
 			while(true)
 			{
 				
@@ -143,7 +154,11 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 				}
 				System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL' ]");
 				msg = input.readLine();
-			}	
+			}
+			//enter index of the item you would like to purchase
+			printInstruments();
+			System.out.println(CYAN+"OPTIONS [ Enter in the index number of the instrument you would like to buy or sell");
+			item = getInstrument();
 			
 			while(true)
 			{
@@ -165,11 +180,11 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			if(msg.equalsIgnoreCase("buy"))
 			{
 				
-				msg = setFixNotation(price, quantity,1);
+				msg = item+"#"+setFixNotation(price, quantity,1);
 			}
 			else
 			{
-				msg = setFixNotation(price, quantity,2);
+				msg = item+"#"+setFixNotation(price, quantity,2);
 			}
 			
             bb = ByteBuffer.wrap(msg.getBytes());
@@ -180,6 +195,33 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			  
 		  }
 			
+	}
+	
+	
+	public static String getInstrument()
+	{
+		
+		try
+		{	
+		
+		    int ret =6;
+			while(true)
+			{
+				System.out.println("Enter Instrument Index [0 -5]");
+			    ret = Integer.parseInt(input.readLine());
+				if(ret < 6)
+				{
+					break;
+				}
+			}
+			return instruments[ret] ;
+			
+		}
+		catch(IOException e)
+		{
+			System.out.println("yeet");
+		}
+		return "yeet";
 	}
 	
 	public static int getPrice()
@@ -202,7 +244,7 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 	public static int getQuantity()
 	{
 		try
-		{	System.out.println("Quantity of bread [1 -10000]");
+		{	System.out.println("Quantity of bread [1 -180]");
 			int ret = Integer.parseInt(input.readLine());
 			return ret;
 			

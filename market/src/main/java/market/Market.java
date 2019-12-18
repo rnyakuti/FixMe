@@ -19,7 +19,7 @@ public class Market
     private static BufferedReader input = null;
 	static String message = null;
     public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};
-	 public static final int[] invetory = {30, 60, 90, 120,150, 180};
+	 public static final int[] inventory = {30, 60, 90, 120,150, 180};
     public static String ID ="";
 	/**********************************************/
 
@@ -67,7 +67,7 @@ public static void printInstruments()
 	System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
 	for(int i = 0; i< instruments.length;i++)
 	{
-		System.out.println(GREEN+" [ "+instruments[i]+" ]"+RESET_CO);
+		System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
 	}
 }
 
@@ -111,14 +111,65 @@ public static void printInstruments()
         return false;
     }
 	
+	public static String processOrder(String instrument, String fixmsg )
+	{
+		int var = 0;
+		for(int i = 0; i< instruments.length;i++)
+		{
+			if(instrument.equals(instruments[i]))
+		    {
+				var = i;
+				break;
+			}
+		}
+		
+		String[] arr = fixmsg.split("\\|");
+		String quantity = arr[11].split("=")[1];
+		String buyOrSell = arr[9].split("=")[1];
+		int varb = 0;
+		
+	
+		    varb = Integer.parseInt(quantity);
+	
+		
+		
+		if(buyOrSell.equals("1"))
+	    {
+			//substract from inventory
+			
+		    inventory[var] = inventory[var] - varb;
+			if(inventory[var] > 0)
+			{
+				return "accepted";
+			}
+			else
+			{
+				return "rejected";
+			}
+		}
+		else
+		{
+		   inventory[var] = inventory[var] + varb;
+			
+			return "accepted";
+		}
+		
+		
+		
+	}
+	
 	public static void handleRequest( SelectionKey key, String ret)
 	{
 		try
 		{
-			String msg = "rejected [tab] "+ret;
+			String[] arr = ret.split("#");
+			String processOrder = processOrder(arr[0], arr[1]);
+			String msg = processOrder+" "+arr[1];
+			System.out.println("request Handled");
 			SocketChannel sc = (SocketChannel) key.channel();
 			ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
 			sc.write(bb);
+			 System.out.println("request sent");
 		}
 		catch(IOException e)
 		{

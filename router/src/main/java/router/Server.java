@@ -84,11 +84,15 @@ public class Server extends Thread {
             System.out.println(YELLOW+"[SERVER]" + CYAN + "[LISTENING ON PORT " + YELLOW + port + CYAN + " ]" + RESET_CO);
 		   String ID = setConnectionID(componentType);
 		   this.ID = ID;
-		   sc = server.accept();
-		   socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
-           System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
-		   clientList.add(socketHandlerAsync);
-		   socketHandlerAsync.start();
+		   while(true)
+		   {
+			   sc = server.accept();
+			   socketHandlerAsync = new Handler(sc, clientList.size() ,messages, port, ID,  componentType);
+			   System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
+			   clientList.add(socketHandlerAsync);
+			   socketHandlerAsync.start();
+		   }
+		   
 		  
 		   
         }
