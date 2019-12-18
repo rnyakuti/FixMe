@@ -20,7 +20,8 @@ public class Broker
 	protected SocketChannel client;
 	protected ArrayList<String> messages = new ArrayList<>();
 	public static String ID ="";
-	 public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};  
+	public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};  
+	 public static final int[] inventory = {10, 20, 30, 40,50, 60};
 	/**********************************************/
 
     public static final String RED = "\u001B[31m";
@@ -159,15 +160,16 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			printInstruments();
 			System.out.println(CYAN+"OPTIONS [ Enter in the index number of the instrument you would like to buy or sell");
 			item = getInstrument();
-			
+			int index = getIndex(item);
 			while(true)
 			{
 				if(quantity > 0)
 				{
 					break;
 				}
-				quantity = getQuantity();
+				quantity = getQuantity(msg, index);
 			}
+			
 			while(true)
 			{
 				if(price > 0)
@@ -184,6 +186,7 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			}
 			else
 			{
+				//check broker inventory
 				msg = item+"#"+setFixNotation(price, quantity,2);
 			}
 			
@@ -195,6 +198,20 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			  
 		  }
 			
+	}
+	
+	public static int getIndex( String item)
+	{
+		int var = 0;
+		for(int i = 0; i< instruments.length;i++)
+		{
+			if(item.equals(instruments[i]))
+		    {
+				var = i;
+				break;
+			}
+		}
+		return var;
 	}
 	
 	
@@ -241,12 +258,34 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 		return 0;
 	}
 	
-	public static int getQuantity()
+	
+	public static int getQuantity(String cmd, int index)
 	{
+		
 		try
 		{	System.out.println("Quantity of bread [1 -180]");
 			int ret = Integer.parseInt(input.readLine());
-			return ret;
+			if(cmd.equalsIgnoreCase("buy"))
+			{
+				return ret;
+			}
+			else
+			{
+				//check inventory
+				int available = inventory[index];
+				while(true)
+				{
+					if(ret < available)
+					{
+						break;
+					}
+					System.out.println(RED+"Available inventory is less than quantity you want to sell"+RESET_CO);
+					System.out.println(GREEN+"Quantity of bread [1 -180]");
+			        ret = Integer.parseInt(input.readLine());
+				}
+				return ret;
+			}
+			
 			
 		}
 		catch(IOException e)
