@@ -51,17 +51,17 @@ public class Router
 					market.sendMessage(brokerMessages);
 					brokerMessages = "";
 				}
-				
+				System.out.println(RED+"Your Order is being processed"+RESET_CO);
 				 marketMessages = market.getMessages();
-			   
+				
 				if(marketMessages.isEmpty())
 				{
-					System.out.println("nope");
+					broker.sendMessage(marketMessages);
 					
 				}
 				else
 				{
-					System.out.println("rejected yeet send");
+					System.out.println(GREEN+"Order processed and sent"+RESET_CO);
 					broker.sendMessage(marketMessages);
 					marketMessages = "";
 				}

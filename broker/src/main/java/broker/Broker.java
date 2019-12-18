@@ -32,7 +32,7 @@ public class Broker
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
     public static final String RESET_CO = "\u001B[0m";
-
+	public static int orderID = 0;
     /*********************************************/
 	
 	
@@ -64,8 +64,8 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 {
 	String fixNotation = "";
 	ZonedDateTime time= ZonedDateTime.now(ZoneOffset.UTC);
-	fixNotation = "35=D|49="+ID+"|56=getID Of market|52="+time+"|55=D|54="+buyOrSell+"|60=1|38="+quantity+"|40=1|44="+price+"|39=1";
-	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|11=ORDERID|21=1|"+fixNotation+"|10="+getChecksum(ByteBuffer.wrap(fixNotation.getBytes()), fixNotation.length())+"|";
+	fixNotation = "35=D|49="+ID+"|56=100001|52="+time+"|55=D|54="+buyOrSell+"|60=1|38="+quantity+"|40=1|44="+price+"|39=1";
+	fixNotation = "8=FIX.4|9="+fixNotation.getBytes().length+"|11="+orderID+"|21=1|"+fixNotation+"|10="+getChecksum(ByteBuffer.wrap(fixNotation.getBytes()), fixNotation.length())+"|";
 	return fixNotation;
 }
 
@@ -119,7 +119,8 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			}
 			else
 			{
-				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");	
+				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
+				updateInventory(result);
 			}
 			outOptions(sc,bb );
 			
@@ -127,6 +128,22 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
         return false;
     }
 	
+	public static void updateInventory(String msg)
+	{
+		String[] arr = msg.split(" ");
+		
+		String[] array = arr[1].split("\\|");
+		String quantity = array[11].split("=")[1];
+		String buyOrSell = array[9].split("=")[1];
+		int varb = 0;
+	    varb = Integer.parseInt(quantity);
+		int var = 0;
+		var = Integer.parseInt(array[2].split("=")[1]);
+		if(arr[0].equals("accepted"))
+		{
+			inventory[var] = inventory[var] + varb;
+		}
+	}
 	
 	public static void printInstruments()
 {
@@ -161,6 +178,7 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			System.out.println(CYAN+"OPTIONS [ Enter in the index number of the instrument you would like to buy or sell");
 			item = getInstrument();
 			int index = getIndex(item);
+			orderID = index;
 			while(true)
 			{
 				if(quantity > 0)
