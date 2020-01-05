@@ -2,16 +2,9 @@ package router;
 
 import java.io.IOException;
 import java.net.*;
-import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 import java.io.BufferedReader;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.DatatypeConverter;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class Server extends Thread {
 
@@ -21,16 +14,12 @@ public class Server extends Thread {
 	public ServerSocketChannel server = null;
 	SocketChannel sc;
     /**********************************************/
-
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
     public static final String YELLOW = "\u001B[33m";
-    public static final String BLUE = "\u001B[34m";
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
-    public static final String WHITE = "\u001B[37m";
     public static final String RESET_CO = "\u001B[0m";
-
     /*********************************************/
     public int port;
     public String componentType;
@@ -46,7 +35,6 @@ public class Server extends Thread {
         this.componentType = cType;
 		clientList = new ArrayList<Handler>();
     }
-
 	
 	private String setConnectionID(String componentType)
 	{
@@ -75,7 +63,6 @@ public class Server extends Thread {
 	
 	}
 	
-	
     protected  void runServer()
     {
         try
@@ -91,10 +78,7 @@ public class Server extends Thread {
 			   System.out.println(PURPLE + componentType+ CYAN + "[ CONNECTION ACCEPTED ] "+YELLOW+"ID : "+GREEN+ID+"\n"+RESET_CO);
 			   clientList.add(socketHandlerAsync);
 			   socketHandlerAsync.start();
-		   }
-		   
-		  
-		   
+		   }		   
         }
         catch (IOException e)
         {
@@ -102,18 +86,17 @@ public class Server extends Thread {
         }
     }
 	
-
-	
 	public void sendMessage(String str) 
 	{
-		
-			//messages.add(str);
-			socketHandlerAsync.sendMessage(str);
+		socketHandlerAsync.sendMessage(str);
+	}
+
+	public String getID()
+	{
+		return ID;
 	}
 
 	public String getMessages() {
-		//
-		
 		return socketHandlerAsync.getMessages();
 	}
 

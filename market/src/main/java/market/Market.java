@@ -8,11 +8,6 @@ import java.util.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.CharBuffer;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.DatatypeConverter;
-
 
 public class Market
 {
@@ -22,16 +17,12 @@ public class Market
 	 public static final int[] inventory = {30, 60, 90, 120,150, 180};
     public static String ID ="";
 	/**********************************************/
-
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
     public static final String YELLOW = "\u001B[33m";
-    public static final String BLUE = "\u001B[34m";
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
-    public static final String WHITE = "\u001B[37m";
     public static final String RESET_CO = "\u001B[0m";
-
     /*********************************************/
 	
 	
@@ -62,16 +53,14 @@ public class Market
         sc.close();
     }
 
-public static void printInstruments()
-{
-	System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
-	for(int i = 0; i< instruments.length;i++)
+	public static void printInstruments()
 	{
-		System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
+		System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
+		for(int i = 0; i< instruments.length;i++)
+		{
+			System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
+		}
 	}
-}
-
-
 
     public static Boolean processReadySet(Set readySet)
             throws Exception {
@@ -102,7 +91,6 @@ public static void printInstruments()
 			}
 			else
 			{
-				 System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + result+" ]");
 				 System.out.println("Handling request");
 				  handleRequest(key,result);
 			}
@@ -122,21 +110,14 @@ public static void printInstruments()
 				break;
 			}
 		}
-		
+
 		String[] arr = fixmsg.split("\\|");
 		String quantity = arr[11].split("=")[1];
 		String buyOrSell = arr[9].split("=")[1];
 		int varb = 0;
-		
-	
-		    varb = Integer.parseInt(quantity);
-	
-		
-		
+		varb = Integer.parseInt(quantity);
 		if(buyOrSell.equals("1"))
 	    {
-			//substract from inventory
-			
 		    inventory[var] = inventory[var] - varb;
 			if(inventory[var] > 0)
 			{
@@ -152,10 +133,7 @@ public static void printInstruments()
 		   inventory[var] = inventory[var] + varb;
 			
 			return "accepted";
-		}
-		
-		
-		
+		}	
 	}
 	
 	public static void handleRequest( SelectionKey key, String ret)
@@ -163,6 +141,7 @@ public static void printInstruments()
 		try
 		{
 			String[] arr = ret.split("#");
+			System.out.println(GREEN+"Message received from Server: "+CYAN+"[ " + arr[1]+" ]");
 			String processOrder = processOrder(arr[0], arr[1]);
 			String msg = processOrder+" "+arr[1];
 			System.out.println("request Handled");
@@ -173,20 +152,9 @@ public static void printInstruments()
 		}
 		catch(IOException e)
 		{
-			
-		}
-		
+			 System.out.println(RED+"request could not be handles");
+		}	
 	}
-	public static String createChecksum(String msg)  throws NoSuchAlgorithmException
-	{
-		//FIX NOTATION
-		MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(msg.getBytes());
-       byte[] digest = md.digest();
-       String checksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
-	   return checksum;
-	}
-	
 	
     public static Boolean processConnect(SelectionKey key) {
         SocketChannel sc = (SocketChannel) key.channel();

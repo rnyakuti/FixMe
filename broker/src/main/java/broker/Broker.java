@@ -5,10 +5,6 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.xml.bind.DatatypeConverter;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -23,14 +19,11 @@ public class Broker
 	public static final String[] instruments = {"The Gold Leaf Bread", "Roquefort and Almond Sourdough bread", "Brioche", "Baguette", "Brown Bread", "White Bread"};  
 	 public static final int[] inventory = {10, 20, 30, 40,50, 60};
 	/**********************************************/
-
     public static final String RED = "\u001B[31m";
     public static final String GREEN = "\u001B[32m";
     public static final String YELLOW = "\u001B[33m";
-    public static final String BLUE = "\u001B[34m";
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
-    public static final String WHITE = "\u001B[37m";
     public static final String RESET_CO = "\u001B[0m";
 	public static int orderID = 0;
     /*********************************************/
@@ -131,7 +124,6 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 	public static void updateInventory(String msg)
 	{
 		String[] arr = msg.split(" ");
-		
 		String[] array = arr[1].split("\\|");
 		String quantity = array[11].split("=")[1];
 		String buyOrSell = array[9].split("=")[1];
@@ -146,14 +138,13 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 	}
 	
 	public static void printInstruments()
-{
-	System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
-	for(int i = 0; i< instruments.length;i++)
 	{
-		System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
+		System.out.println(YELLOW+"LIST OF AVAILABLE BREADS TO TRADE"+RESET_CO);
+		for(int i = 0; i< instruments.length;i++)
+		{
+			System.out.println(CYAN+"index"+i+GREEN+" : [ "+instruments[i]+" ]"+RESET_CO);
+		}
 	}
-}
-	
 	
 	public static void outOptions( SocketChannel sc,ByteBuffer bb )
 	{
@@ -173,7 +164,6 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 				System.out.println(GREEN+"OPTIONS [ 'BUY' OR 'SELL' ]");
 				msg = input.readLine();
 			}
-			//enter index of the item you would like to purchase
 			printInstruments();
 			System.out.println(CYAN+"OPTIONS [ Enter in the index number of the instrument you would like to buy or sell");
 			item = getInstrument();
@@ -199,23 +189,19 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			
 			if(msg.equalsIgnoreCase("buy"))
 			{
-				
 				msg = item+"#"+setFixNotation(price, quantity,1);
 			}
 			else
 			{
-				//check broker inventory
 				msg = item+"#"+setFixNotation(price, quantity,2);
-			}
-			
+			}	
             bb = ByteBuffer.wrap(msg.getBytes());
             sc.write(bb);
 		  }	
 		  catch(IOException e)
 		  {
-			  
-		  }
-			
+			System.out.println(RED+"FAILED");
+		  }		
 	}
 	
 	public static int getIndex( String item)
@@ -238,7 +224,6 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 		
 		try
 		{	
-		
 		    int ret =6;
 			while(true)
 			{
@@ -249,29 +234,26 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 					break;
 				}
 			}
-			return instruments[ret] ;
-			
+			return instruments[ret] ;	
 		}
 		catch(IOException e)
 		{
-			System.out.println("yeet");
+			System.out.println(RED+"FATAL ERROR : Requested an integer, received something else");
 		}
 		return "yeet";
 	}
 	
 	public static int getPrice()
 	{
-		
 		try
 		{	
 			System.out.println("At what price [1 -10000]");
 			int ret = Integer.parseInt(input.readLine());
-			return ret;
-			
+			return ret;	
 		}
 		catch(IOException e)
 		{
-			System.out.println("yeet");
+			System.out.println(RED+"FATAL ERROR: Requested an integer, received something else");
 		}
 		return 0;
 	}
@@ -289,7 +271,6 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			}
 			else
 			{
-				//check inventory
 				int available = inventory[index];
 				while(true)
 				{
@@ -302,9 +283,7 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 			        ret = Integer.parseInt(input.readLine());
 				}
 				return ret;
-			}
-			
-			
+			}	
 		}
 		catch(IOException e)
 		{
@@ -312,8 +291,6 @@ public static String setFixNotation(int price, int quantity, int buyOrSell)
 		}
 		return 0;
 	}
-	
-	
     public static Boolean processConnect(SelectionKey key) {
         SocketChannel sc = (SocketChannel) key.channel();
         try {
